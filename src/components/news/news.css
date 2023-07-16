@@ -1,0 +1,54 @@
+.libraryCover{
+  width: 90px;
+  height: 130px;
+  border-radius: 5px;
+}
+
+.libraryCoverContainer{
+  display: flex;
+  justify-content: center;
+}
+
+.librarySubtitle{
+  font-size: 14px;
+  margin-top: -12px;
+  margin-bottom: 12px;
+}
+
+.dFlex{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rightbarHR{
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 130px 130px 130px 130px 130px;
+  gap: 10px;
+  padding: 10px;
+}
+
+.grid-container > div {
+  text-align: center;
+  font-size: 30px;
+}
+
+.libraryWidth{
+  width: 150px;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.titleContainer{
+  width: 90px;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
