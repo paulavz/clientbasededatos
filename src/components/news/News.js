@@ -4,6 +4,7 @@ import "./news.css";
 import Add from "@mui/icons-material/Add";
 import { AuthContext } from "../../context/AuthContext";
 import { followLibraryCall, unFollowLibraryCall } from "../../apiCalls";
+import { useHistory } from "react-router-dom";
 
 export default function News({
   data,
@@ -11,8 +12,10 @@ export default function News({
   showFollowButton,
   showAddButton,
   showUnfollowButton,
+  setValue,
 }) {
   const { user, dispatch } = useContext(AuthContext);
+  const history = useHistory();
 
   return (
     <div>
@@ -29,7 +32,12 @@ export default function News({
           <div style={{ fontWeight: "bold", marginBottom: "20px" }}>
             No tienes librerias aún
           </div>
-          <Button color="primary" variant="contained" endIcon={<Add />}>
+          <Button
+            onClick={() => history.push("/crear/library")}
+            color="primary"
+            variant="contained"
+            endIcon={<Add />}
+          >
             Crear Libreria
           </Button>
         </div>
@@ -117,7 +125,11 @@ export default function News({
               </div>
               <div className="libraryCoverContainer">
                 <img
-                  src="http://localhost:4000/person/9.jpeg"
+                  src={
+                    lib.img
+                      ? `http://localhost:4000/${lib.img}`
+                      : "http://localhost:4000/person/9.jpeg"
+                  }
                   alt=""
                   className="libraryCover"
                 />
@@ -144,6 +156,9 @@ export default function News({
                       marginLeft: "10px",
                       marginTop: "-10px",
                     }}
+                    onClick={() => {
+                      setValue(3);
+                    }}
                   >
                     <Add />
                   </IconButton>
@@ -162,7 +177,11 @@ export default function News({
                           <div className="rightbarDocTitle">{doc?.title}</div>
                         </div>
                         <img
-                          src="http://localhost:4000/person/9.jpeg"
+                          src={
+                            doc?.img
+                              ? `http://localhost:4000${doc?.img}`
+                              : "http://localhost:4000/person/9.jpeg"
+                          }
                           alt=""
                           className="libraryCover"
                         />

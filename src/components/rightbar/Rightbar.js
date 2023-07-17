@@ -1,18 +1,14 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import "./rightbar.css";
-import Online from "../online/Online";
-import { Users } from "../../dummyData";
-import { Add, Remove } from "@material-ui/icons";
+import { Box } from "@material-ui/core";
 
 export default function Rightbar({ user }) {
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friends, setFriends] = useState([]);
   const [documents, setDocuments] = useState([]);
-  const { user: currentUser, dispatch } = useContext(AuthContext);
-  const [followed, setFollowed] = useState(
+  const { user: currentUser } = useContext(AuthContext);
+  const [, setFollowed] = useState(
     currentUser?.followings?.includes(user?._id)
   );
   useEffect(() => {
@@ -21,7 +17,9 @@ export default function Rightbar({ user }) {
   useEffect(() => {
     const getTeachers = async () => {
       try {
-        const friendList = await axios.get("http://localhost:4000/api/library");
+        const friendList = await axios.get(
+          "http://localhost:4000/api/library?limit=4"
+        );
         setFriends(friendList.data);
       } catch (err) {
         console.log(err);
@@ -30,7 +28,7 @@ export default function Rightbar({ user }) {
     const getDocuments = async () => {
       try {
         const documents = await axios.get(
-          "http://localhost:4000/api/documents"
+          "http://localhost:4000/api/documents?limit=16"
         );
         setDocuments(documents.data);
       } catch (err) {
@@ -66,28 +64,30 @@ export default function Rightbar({ user }) {
         <h4 className="rightbarTitle">Últimas bibliotecas</h4>
 
         <div className="rightbarFollowings">
-          {friends?.map((friend) => (
-            <Link
-              to={"/profile/" + friend.username}
-              key={friend._id}
-              style={{ textDecoration: "none" }}
-            >
-              <div className="rightbarFollowing">
-                <span className="rightbarFollowingName">{`${friend.name}`}</span>
+          {friends?.map((friend) => {
+            console.log(friend?.img);
+            return (
+              <Box>
+                <div className="rightbarFollowing">
+                  <span
+                    style={{ height: "30px" }}
+                    className="rightbarFollowingName"
+                  >{`${friend.name}`}</span>
 
-                <img
-                  src={
-                    friend.profilePicture
-                      ? PF + friend.profilePicture
-                      : "http://localhost:4000/person/1.jpeg"
-                  }
-                  alt="Seguidores"
-                  className="rightbarFollowingImg"
-                />
-                <span className="rightbarFollowingAuthor">{`${friend.subject}`}</span>
-              </div>
-            </Link>
-          ))}
+                  <img
+                    src={
+                      friend?.img
+                        ? `http://localhost:4000/${friend?.img}`
+                        : "http://localhost:4000/person/1.jpeg"
+                    }
+                    alt="Seguidores"
+                    className="rightbarFollowingImg"
+                  />
+                  <span className="rightbarFollowingAuthor">{`${friend.subject}`}</span>
+                </div>
+              </Box>
+            );
+          })}
         </div>
       </>
     );
@@ -107,7 +107,11 @@ export default function Rightbar({ user }) {
             return (
               <div className="rightbarDoc">
                 <img
-                  src="http://localhost:4000/person/1.jpeg"
+                  src={
+                    doc?.img
+                      ? `http://localhost:4000${doc?.img}`
+                      : "http://localhost:4000/person/1.jpeg"
+                  }
                   alt="Seguidores"
                   className="rightbarFollowingImg"
                 />

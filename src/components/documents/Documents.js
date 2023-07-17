@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ImageList from "@material-ui/core/ImageList";
 import Document from "../document/Document";
-import axios from "axios";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { documentCall } from "../../apiCalls";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,12 +58,7 @@ export default function Documents(prop) {
     const getLibraries = async () => {
       try {
         if (!documents) {
-          const document = await axios.get(
-            "http://localhost:4000/api/documents"
-          );
-          if (document.data) {
-            dispatch({ type: "UPDATE_BOOKS", payload: document.data });
-          }
+          documentCall(dispatch);
         }
       } catch (err) {
         console.log(err);
@@ -73,7 +68,6 @@ export default function Documents(prop) {
     getLibraries();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   return (
     <div style={{ width: "700px", display: "flex" }}>
       <ImageList

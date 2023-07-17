@@ -37,6 +37,9 @@ export default function CreateDocument() {
   const [type, setType] = useState("");
   const [gender, setGender] = useState("");
   const [country, setCountry] = useState("");
+  const [cover, setCover] = useState(null);
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
   const { dispatch } = useContext(AuthContext);
   const history = useHistory();
 
@@ -52,22 +55,51 @@ export default function CreateDocument() {
     gender,
     country
   ) {
-    const body = {
-      title,
-      publisher,
-      year,
-      edition,
-      authors: [authors],
-      subject,
-      category,
-      type,
-      gender,
-      country,
-    };
-    const resp = await axios.post(`http://localhost:4000/api/documents`, body);
-    if (resp.status === 200) {
-      documentCall(dispatch);
-      history.push("/");
+    if (cover && file) {
+      const formData = new FormData();
+      formData.append("file", cover);
+      const file1 = await axios.post(
+        "http://localhost:4000/api/files/upload/pfp",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      if (file1.status === 200) {
+        const formData2 = new FormData();
+        formData2.append("file", file);
+        const file2 = await axios.post(
+          "http://localhost:4000/api/files/upload",
+          formData2,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+        if (file2.status === 200) {
+          const body = {
+            title,
+            publisher,
+            year,
+            edition,
+            authors: [authors],
+            subject,
+            category,
+            type,
+            gender,
+            country,
+            img: file1?.data?.path || "",
+            file: file2?.data?.path || "",
+          };
+          const resp = await axios.post(
+            `http://localhost:4000/api/documents`,
+            body
+          );
+          if (resp.status === 200) {
+            documentCall(dispatch);
+            history.push("/");
+          }
+        }
+      }
     }
   }
 
@@ -161,15 +193,26 @@ export default function CreateDocument() {
                       id="img"
                       name="img"
                       accept=".jpg, .jpeg, .png"
+                      onChange={async (ev) => {
+                        setCover(ev.target.files[0]);
+                        setPreview(URL.createObjectURL(ev.target.files[0]));
+                      }}
                     />
                   </FormControl>
+                  {preview && (
+                    <img
+                      style={{ width: "140px", height: "190px" }}
+                      src={preview}
+                      alt="preview"
+                    />
+                  )}
                   <FormControl fullWidth style={{ width: "70%" }}>
                     <FormLabel>Archivo del Documento</FormLabel>
                     <input
                       type="file"
-                      id="img"
-                      name="img"
-                      accept=".jpg, .jpeg, .png"
+                      onChange={async (ev) => {
+                        setFile(ev.target.files[0]);
+                      }}
                     />
                   </FormControl>
                   <FormControl fullWidth style={{ width: "70%" }}>

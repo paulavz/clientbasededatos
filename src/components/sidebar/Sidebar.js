@@ -1,16 +1,4 @@
 import "./sidebar.css";
-import {
-  RssFeed,
-  Chat,
-  PlayCircleFilled,
-  Group,
-  Bookmark,
-  HelpOutline,
-  Work,
-  Event,
-  School,
-} from "@material-ui/icons";
-import { Users } from "../../dummyData";
 import CloseFriend from "../closeFriend/CloseFriend";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -21,7 +9,9 @@ export default function Sidebar() {
   useEffect(() => {
     const getTeachers = async () => {
       try {
-        const friendList = await axios.get("http://localhost:4000/api/users");
+        const friendList = await axios.get(
+          "http://localhost:4000/api/users?limit=8"
+        );
         setTeacher(friendList.data);
       } catch (err) {
         console.log(err);
@@ -53,11 +43,7 @@ export default function Sidebar() {
           })}
         </ul>
         <h4 className="rightbarTitle">Publicidad</h4>
-        <img
-          className="ad"
-          src="http://localhost:4000/ad.png"
-          alt="ad"
-        />
+        <img className="ad" src="http://localhost:4000/ad.png" alt="ad" />
       </div>
     </div>
   );

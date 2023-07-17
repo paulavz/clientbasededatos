@@ -17,7 +17,7 @@ import { useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
-import { updateLibrariesCall } from "../../apiCalls";
+import { updateLibrariesCall, updateMyLibraryCall } from "../../apiCalls";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,16 +42,34 @@ export default function CreateLibrary() {
   const { user, dispatch } = useContext(AuthContext);
 
   async function saveLibrary(name, subject, doc) {
-    const body = {
-      name,
-      subject,
-      documents: doc,
-      userId: user._id,
-    };
-    const resp = await axios.post("http://localhost:4000/api/library", body);
-    if (resp.status === 200) {
-      updateLibrariesCall(dispatch);
-      history.push("/");
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      const result = await axios.post(
+        "http://localhost:4000/api/files/upload/pfp",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      if (result.status === 200) {
+        const body = {
+          name,
+          subject,
+          documents: doc,
+          userId: user._id,
+          img: result.data.path,
+        };
+        const resp = await axios.post(
+          "http://localhost:4000/api/library",
+          body
+        );
+        if (resp.status === 200) {
+          updateLibrariesCall(dispatch);
+          updateMyLibraryCall(user?._id, dispatch);
+          history.push("/");
+        }
+      }
     }
   }
 
@@ -119,7 +137,8 @@ export default function CreateLibrary() {
                         id="img"
                         name="img"
                         accept=".jpg, .jpeg, .png"
-                        onChange={(ev) => {
+                        onChange={async (ev) => {
+                          setFile(ev.target.files[0]);
                           setPreview(URL.createObjectURL(ev.target.files[0]));
                         }}
                       />
@@ -146,6 +165,7 @@ export default function CreateLibrary() {
                       color="primary"
                       onClick={(ev) => {
                         ev.preventDefault();
+
                         saveLibrary(name, subject, doc);
                       }}
                       type="submit"

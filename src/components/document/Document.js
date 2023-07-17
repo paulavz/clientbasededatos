@@ -156,7 +156,11 @@ export default function Document(prop) {
       >
         <img
           style={{ borderRadius: "5px" }}
-          src="http://localhost:4000/person/8.jpeg"
+          src={
+            data.img
+              ? `http://localhost:4000${data.img}`
+              : "http://localhost:4000/person/8.jpeg"
+          }
           alt="example"
         />
         <ImageListItemBar
@@ -200,9 +204,21 @@ export default function Document(prop) {
           </Box>
           <Box display="flex" justifyContent="flex-end" marginTop="25px">
             <Button
+              color="secondary"
+              variant="contained"
+              minWidth={100}
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              Cerrar
+            </Button>
+
+            <Button
               color="primary"
               variant="contained"
               minWidth={100}
+              style={{ marginLeft: "20px" }}
               onClick={() => {
                 addDocumentToLibrary(value, data._id);
               }}

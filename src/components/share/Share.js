@@ -65,6 +65,7 @@ export default function Share() {
               showFollowButton
               showAddButton={false}
               showUnfollowButton={false}
+              setValue={setValue}
             />
           )}
         </div>
@@ -76,6 +77,7 @@ export default function Share() {
               showFollowButton={false}
               showAddButton
               showUnfollowButton={false}
+              setValue={setValue}
             />
           )}
         </div>
@@ -86,6 +88,7 @@ export default function Share() {
               isEdit={false}
               showFollowButton={false}
               showUnfollowButton
+              setValue={setValue}
             />
           )}
         </div>

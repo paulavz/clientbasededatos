@@ -38,6 +38,9 @@ function AppRouter() {
         <Route path="/profile/:username">
           <Profile />
         </Route>
+        <Route path="/document/:id">
+          <DocumentPerfil />
+        </Route>
       </Switch>
     </Router>
   );

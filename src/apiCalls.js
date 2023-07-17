@@ -15,6 +15,18 @@ export const loginCall = async (userCredential, dispatch) => {
   }
 };
 
+export const updateUserCall = async (id, dispatch) => {
+  try {
+    const res = await axios.get(`http://localhost:4000/api/users/${id}`);
+    if (res.data) {
+      console.log("LOGIN_SUCCESS");
+      dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
+    }
+  } catch (err) {
+    dispatch({ type: "LOGIN_FAILURE", payload: err });
+  }
+};
+
 export const documentCall = async (dispatch) => {
   try {
     const document = await axios.get("http://localhost:4000/api/documents");
